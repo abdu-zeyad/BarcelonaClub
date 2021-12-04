@@ -16,7 +16,7 @@ namespace Barcelona.Models.Services
         }
         public async Task<Player> CreatePlayer(Player player)
         {
-            _context.Entry(player).State = EntityState.Modified;
+            _context.Entry(player).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return player;
         }

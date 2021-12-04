@@ -17,6 +17,8 @@ namespace Barcelona.Controllers
         {
             _player = p;
         }
+        [HttpGet]
+
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
         {
             // You should count the list ...
