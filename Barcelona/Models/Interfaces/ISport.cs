@@ -8,7 +8,7 @@ namespace Barcelona.Models.Interfaces
         Task<Sport> GetSport(int Id);
         Task<List<Sport>> GetSports();
         Task<Sport> CreateSport(Sport sport);
-        Task<Sport>UpdateSport(Sport sport);
+        Task<Sport>UpdateSport(int Id,Sport sport);
         Task DeleteSport(int Id);
 
     }

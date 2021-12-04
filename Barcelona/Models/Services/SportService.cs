@@ -40,7 +40,7 @@ namespace Barcelona.Models.Services
             return await _context.Sports.Include(s => s.Players).ToListAsync();
         }
 
-        public async Task<Sport> UpdateSport(Sport sport)
+        public async Task<Sport> UpdateSport(int Id, Sport sport)
         {
             _context.Entry(sport).State=EntityState.Modified;
             await _context.SaveChangesAsync();
