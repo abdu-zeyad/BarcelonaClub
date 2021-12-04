@@ -1,4 +1,6 @@
-﻿using Barcelona.Models.Interfaces;
+﻿using Barcelona.Data;
+using Barcelona.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,29 +8,43 @@ namespace Barcelona.Models.Services
 {
     public class SportService : ISport
     {
-        public Task<Sport> CreateSport(Sport sport)
+        private BarcelonaDbContext _context;
+
+        public SportService(BarcelonaDbContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+        }
+        public async Task<Sport> CreateSport(Sport sport)
+        {
+            _context.Entry(sport).State= EntityState.Added;
+            await _context.SaveChangesAsync();
+            return sport;
         }
 
-        public Task DeleteSport(int Id)
+        public async Task DeleteSport(int Id)
         {
-            throw new System.NotImplementedException();
+            var sport = GetSport(Id);
+            _context.Entry(sport).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+            
         }
 
-        public Task<Sport> GetSport(int Id)
+        public async Task<Sport> GetSport(int Id)
         {
-            throw new System.NotImplementedException();
+           var sport= await _context.Sports.Include(s => s.Players).FirstOrDefaultAsync(x=>x.Id==Id);
+            return sport;
+        } 
+
+        public async Task<List<Sport>> GetSports()
+        {
+            return await _context.Sports.Include(s => s.Players).ToListAsync();
         }
 
-        public Task<List<Sport>> GetSports()
+        public async Task<Sport> UpdateSport(Sport sport)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Sport> UpdateSport(Sport sport)
-        {
-            throw new System.NotImplementedException();
+            _context.Entry(sport).State=EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return sport;
         }
     }
 }

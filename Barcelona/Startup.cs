@@ -1,5 +1,7 @@
 using Barcelona.Data;
 using Barcelona.Models;
+using Barcelona.Models.Interfaces;
+using Barcelona.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,7 +33,9 @@ namespace Barcelona
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+      );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Barcelona", Version = "v1" });
@@ -45,6 +49,12 @@ namespace Barcelona
             {
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<BarcelonaDbContext>() ;
+
+
+            services.AddTransient<IUser, UserService>();
+            services.AddTransient<IPlayer, PlayerService>();
+            services.AddTransient<ISport, SportService>();
+            services.AddTransient<IVenue, VenueService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

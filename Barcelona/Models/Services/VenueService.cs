@@ -15,14 +15,19 @@ namespace Barcelona.Models.Services
         {
             _context= context;
         }
-        public Task<Venue> CreateVenue(Venue venue)
+        public async Task<Venue> CreateVenue(Venue venue)
         {
-            throw new System.NotImplementedException();
+            _context.Entry(venue).State = EntityState.Added;
+           await _context.SaveChangesAsync();
+            return venue;
         }
 
-        public Task DeleteVenue(int Id)
+        public async Task DeleteVenue(int Id)
         {
-            throw new System.NotImplementedException();
+            var venue = GetVenue(Id);
+            _context.Entry(venue).State= EntityState.Deleted;
+            await _context.SaveChangesAsync();
+            
         }
 
         public async Task<Venue> GetVenue(int Id)
@@ -35,9 +40,12 @@ namespace Barcelona.Models.Services
             return await _context.Venues.Include(v => v.Sport).ToListAsync();
         }
 
-        public Task<Venue> UpdateVenue(int Id, Venue venue)
+        public async Task<Venue> UpdateVenue(int Id, Venue venue)
         {
-            throw new System.NotImplementedException();
+            _context.Entry(venue).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return venue;
+            
         }
     }
 }

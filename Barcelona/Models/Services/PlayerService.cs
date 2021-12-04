@@ -1,4 +1,6 @@
-﻿using Barcelona.Models.Interfaces;
+﻿using Barcelona.Data;
+using Barcelona.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,29 +8,42 @@ namespace Barcelona.Models.Services
 {
     public class PlayerService : IPlayer
     {
-        public Task<Player> CreatePlayer(Player player)
+        private BarcelonaDbContext _context;
+
+        public PlayerService(BarcelonaDbContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+        }
+        public async Task<Player> CreatePlayer(Player player)
+        {
+            _context.Entry(player).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return player;
         }
 
-        public Task DeletePlayer(int Id)
+        public async Task DeletePlayer(int Id)
         {
-            throw new System.NotImplementedException();
+            var player = GetPlayer(Id);
+            _context.Entry(player).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
         }
 
         public Task<Player> GetPlayer(int Id)
         {
-            throw new System.NotImplementedException();
+            var player = _context.Players.FirstOrDefaultAsync(p=>p.Id == Id);
+            return player;
         }
 
-        public Task<List<Player>> GetPlayers()
+        public async Task<List<Player>> GetPlayers()
         {
-            throw new System.NotImplementedException();
+            return await _context.Players.ToListAsync();
         }
 
-        public Task<Player> UpdatePlayer(int Id, Player player)
+        public async Task<Player> UpdatePlayer(int Id, Player player)
         {
-            throw new System.NotImplementedException();
+            _context.Entry(player).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return player;
         }
     }
 }
